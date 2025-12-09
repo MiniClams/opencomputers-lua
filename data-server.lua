@@ -50,6 +50,10 @@ while (true) do
 	elseif message_type == "set_data" then
 		--set_data packages will have message split by :
 		local key, value = string.match(message, "([^:]+):(.+)")
+		if not key then
+			print("error: string does not contain :")
+			return
+		end
 		setData(key, value)
 		print("data: "..key.." written!")
 	end
