@@ -16,8 +16,8 @@ services = {"library", "messaging"}
 
 library = {"data_request", "set_data", "data_response"}
 
-local extenal_port_range_low = 1
-local extenal_port_range_high = 5
+local external_port_range_low = 1
+local external_port_range_high = 5
 
 --init
 --open ports
