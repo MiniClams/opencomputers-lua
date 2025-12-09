@@ -1,11 +1,11 @@
 component = require("component")
 io = require("io")
 event = require("event")
-modem = component.modem
 
 --detect modem or tunnel
 local tunnel = false
 local my_port = 0
+local modem = nil
 
 if component.isAvailable("tunnel") then
 	tunnel = true
@@ -15,6 +15,7 @@ end
 
 --setup
 function network_card_setup()
+	modem = component.modem
 	print("Requesting port from router...")
 	modem.open(1000)
 	modem.broadcast(1000, "port_request", "library")
