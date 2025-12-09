@@ -42,7 +42,7 @@ end
 
 --parse network messages
 while (true) do
-	modem.open(my_port)
+	modem.open(tonumber(my_port))
 	local event_name, localaddr, remoteaddr, port, dist, message_type, message = event.pull("modem_message")
 	if message_type == "data_request" then
 		modem.send(remoteaddr, port, getData(message))
