@@ -37,7 +37,7 @@ end
 --communication function
 function broadcast(message_type, message)
 	if tunnel then
-		tunnel.send(message_type, message)
+		component.tunnel.send(message_type, message)
 	else
 		modem.open(tonumber(my_port))
 		modem.broadcast(tonumber(my_port), message_type, message)
