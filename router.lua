@@ -43,7 +43,7 @@ end
 --convert packet types to lookup table
 local library_lookup = {}
 for _, v in ipairs(library) do
-    library[v] = true
+    library_lookup[v] = true
 end
 
 function indexOf(tbl, value)
@@ -65,7 +65,9 @@ while (true) do
 		if response == nil then
 			print("Warning: No service ID for: "..message)
 		end
-		modem.send(remoteaddr, port, "router_response", response)
+		response = response + internal_domain
+		print("providing port allocation")
+		modem.send(remoteAddr, port, "router_response", response)
 	elseif message_type == "router_ping" then
 		modem.send(remoteaddr, port, "router_response", "ping")
 	else
@@ -77,6 +79,7 @@ while (true) do
 				if string.find(message_type, "response") then
 					--it IS a response! lets forward it on the port
 					modem.broadcast(external_port_last_used, message_type, message)
+					print("forwarding response packet")
 				else
 					--it is NOT a response! that must mean our last packet didn't need/get one
 					external_port_last_used = 0
@@ -86,8 +89,12 @@ while (true) do
 			--this is an external message
 			if library_lookup[message_type] then --packet is a library packet
 				local library_port = indexOf(services, "library")
+				library_port = library_port + internal_domain
+				print("forwarding library packet on port: "..library_port)
 				modem.broadcast(library_port, message_type, message)
 				external_port_last_used = port;
+			else
+				print("found unknown message type: "..message_type)
 			end
 		end
 	end

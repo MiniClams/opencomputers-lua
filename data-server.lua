@@ -12,8 +12,18 @@ if not filesystem.exists("/home/data/") then
 end
 
 local my_port = 0
-io.write("Set port: ")
-my_port = io.read()
+print("Requesting port from router...")
+modem.open(1000)
+modem.broadcast(1000, "port_request", "library")
+local _, _, _, _, _, message_type, message = event.pull(10, "modem_message")
+modem.close(1000)
+if message_type == "router_response" then
+	my_port = message
+	print("Port is: "..message)
+else
+	io.write("Set port: ")
+	my_port = io.read()
+end
 
 --getting/setting data values
 function getData(key)
@@ -45,8 +55,8 @@ while (true) do
 	modem.open(tonumber(my_port))
 	local event_name, localaddr, remoteaddr, port, dist, message_type, message = event.pull("modem_message")
 	if message_type == "data_request" then
-		modem.send(remoteaddr, port, getData(message))
-		print("data: "..key.." sent!")
+		modem.send(remoteaddr, port, "data_response", getData(message))
+		print("data: "..message.." sent!")
 	elseif message_type == "set_data" then
 		--set_data packages will have message split by :
 		local key, value = string.match(message, "([^:]+):(.+)")

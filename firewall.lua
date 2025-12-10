@@ -18,7 +18,7 @@ while (true) do
 	if eventName == "modem_message" then
 		if message_type == "router_sync" then --so we know what the router is
 			router_addr = remote_addr
-			computer.beep(2000, 5)
+			computer.beep(2000, 1)
 		end
 		if remote_addr ~= router_addr then --if it's not the router it's a client
 			known_clients[remote_addr] = true
